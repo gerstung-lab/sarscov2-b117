@@ -1,7 +1,7 @@
-import geopandas as gpd
+# import geopandas as gpd
 import pandas as pd
 from collections import Counter
-from uk_covid19 import Cov19API
+# from uk_covid19 import Cov19API
 
 from covid19.config import API, Files
 

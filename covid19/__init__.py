@@ -7,7 +7,7 @@ from covid19.data import (
     get_raw_cases,
     get_utla_data,
 )
-from covid19.distributions import SparseICAR, NegativeBinomial
+from covid19.distributions import NegativeBinomial
 
 from covid19.utils import (
     NutsHandler,

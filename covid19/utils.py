@@ -18,63 +18,6 @@ import scipy.stats as stats
 from covid19.types import Guide, Model
 import dill
 
-def compute_R(y, mu=14.9, sigma=3.9, a=1, b=5, τ=7):
-    
-    t_start = np.arange(1, y.shape[0]-τ+1)
-    t_end = np.arange(τ, y.shape[0])
-    
-    p = np.array([discretise_epistm(i, mu, sigma) for i in range(y.shape[0])])
-    expectation = (np.arange(0, p.shape[0]) * p).sum()
-    
-    λ = np.zeros(p.shape[0])
-    
-    λ[0] = np.nan
-    for t in range(1, y.shape[0]):
-        λ[t] = np.sum(p[np.arange(t+1)] * y[np.arange(t, -1, -1)])
-    print(np.array([ y[t_start[t]:t_end[t]].sum() if t_end[t]+1 > expectation else np.nan for t in range(t_start.shape[0]) ]))    
-    a_p = np.array([ a + y[t_start[t]:t_end[t]].sum() if t_end[t]+1 > expectation else np.nan for t in range(t_start.shape[0]) ])
-    b_p = np.array([ 1/ (1/b + λ[t_start[t]:t_end[t]].sum()) if t_end[t]+1 > expectation else np.nan for t in range(t_start.shape[0]) ])
-    
-    return a_p, b_p, λ
-
-def reparametrise_gamma(mean, cv):
-    alpha  = 1/cv**2
-    beta = mean * cv **2
-    return alpha, beta
-
-def discretise_epistm(k, mu, sigma):
-    """
-    Discretises a gamma distribution according to Cori et al.
-    """
-    a = ((mu - 1) / sigma) ** 2
-    b = sigma ** 2 / (mu - 1)
-    
-    cdf_gamma = stats.gamma(a=a, scale=b).cdf
-    cdf_gamma2 = stats.gamma(a=a+1, scale=b).cdf
-    
-    res = k * cdf_gamma(k) + (k-2) * cdf_gamma(k-2) - 2 * (k-1) * cdf_gamma(k-1)
-    res = res + a * b * (2 * cdf_gamma2(k-1) - cdf_gamma2(k-2) - cdf_gamma2(k))
-    
-    return max(res, 0)
-
-
-def create_prediction_table(model, start_date="09/01/2020"):
-    data = model.mean("λ", "posterior_predictive")
-    pred = pd.DataFrame(np.array(data)).rename(
-        columns=lambda x: dict(
-            zip(
-                range(data.shape[1]),
-                [
-                    str(day)[:10]
-                    for day in pd.date_range(
-                        start=start_date, periods=data.shape[1]
-                    ).tolist()
-                ],
-            )
-        )[x]
-    )
-    return pred
-
 
 def create_spline_basis(
     x, knot_list=None, num_knots=None, degree=3, add_intercept=True
