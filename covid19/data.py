@@ -1,9 +1,14 @@
 # import geopandas as gpd
 import pandas as pd
 from collections import Counter
+
 # from uk_covid19 import Cov19API
 
 from covid19.config import API, Files
+
+
+def get_lads(lad_path=Files.LAD):
+    return pd.read_csv(lad_path, index_col=0)
 
 
 def get_utla_data(utla_path=Files.UTLA_PATH):

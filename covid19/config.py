@@ -2,6 +2,10 @@ import os
 
 
 class Files:
+    LAD = os.path.join(
+        os.getcwd(),
+        "covid19/data/lads.csv",
+    )
     LAD_PATH = os.path.join(
         os.getcwd(),
         "covid19/data/Local_Authority_Districts__December_2019__Boundaries_UK_BFC.shp",

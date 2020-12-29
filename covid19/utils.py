@@ -241,4 +241,3 @@ class NutsHandler(Handler):
         with open(path, "rb") as f:
             posterior = dill.load(f)
         return NutsHandler(model, posterior=posterior)
-

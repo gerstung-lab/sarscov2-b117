@@ -1,5 +1,6 @@
 # expose api
 from covid19.data import (
+    get_lads,
     extract_covariate,
     get_cases,
     get_geodata,
